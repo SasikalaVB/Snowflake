@@ -216,3 +216,82 @@ countries.region_id=regions.region_id;
 
 ----------------------------------------------------------------------------------------
 
+list @citibike_trips1;
+
+select current_timestamp();
+
+select sysdate();
+
+set mytime = current_time;
+select $mytime;
+
+set (mytime, mytimestamp) = (current_time, current_timestamp);
+select $mytime, $mytimestamp;
+
+-- specifying current_time(9) and current_timestamp(9)
+set (mytime, mytimestamp) = ( current_time(9), current_timestamp(9));
+select $mytime, $mytimestamp;
+
+--- To set precision level properly use session level parameters
+
+alter session set timestamp_output_format = 'YYYY-MM-DD HH24:MI:SS.FF';
+alter session set time_output_format = 'HH24:MI:SS.FF';
+
+set (mytime, mytimestamp) = (current_time(9), current_timestamp(9));
+select $mytime, $mytimestamp;
+
+
+use role sysadmin;
+use database SALES;
+use schema sandbox;
+
+select current_database();
+-------------------------------------------------------------------------
+//create a table demo01 if doesnot exist, with columns as row_id, dt_value, time_value, ts_value, sysdt_value msg
+
+drop table if exists demo01;
+create table demo01
+(
+  row_id integer autoincrement not null,
+  dt_value date default current_date(),
+  time_value time default current_time(),
+  ts_value timestamp default current_timestamp(),
+  sysdt_value timestamp default sysdate(),
+  msg string
+  );
+
+select current_database();
+
+desc table demo01;
+
+insert into demo01 (msg) values ('1st row');
+select * from demo01;
+
+/* inserted values are 
+ROW_ID	DT_VALUE	TIME_VALUE	TS_VALUE	SYSDT_VALUE	MSG
+1	2022-06-01	02:30:10.574000000	2022-06-01 02:30:10.574	2022-06-01 09:30:10.574	1st row
+Still here, we are seeing a 7 hrs difference between 2022-06-01 02:30:10.574	2022-06-01 09:30:10.574,
+to correct this, we need to alter session level parameters.
+
+
+Session level parameters means , only for that worksheet it is created.
+If I come out of that worksheet then those paramters are inefficitive..
+
+alter session set timestamp_output_format = "YYYY-MM-DD HH24:MI:SS.FF";
+alter session set time_output_format = "HH24:MI:SS.FF";
+
+*/
+
+alter session set timestamp_output_format = "YYYY-MM-DD HH24:MI:SS.FF";
+alter session set time_output_format = "HH24:MI:SS.FF";
+
+select * from demo01;
+
+-----------------------------------------------------------------
+
+/* insert into demo01 10 rows */
+
+insert into demo01 (msg) values
+('2nd row'), ('3rd row'), ('4th row'), ('5th row'), ('6th row'), 
+
+--------------------------------------------------------------------------------
