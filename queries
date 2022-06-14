@@ -1,0 +1,218 @@
+create table SF_TRIPS 
+( TRIPDURATION integer,
+  STARTTIME timestamp,
+  STOPTIME timestamp,
+  START_STATION_ID integer,
+  START_STATION_NAME string,
+  START_STATION_LATITUDE float,
+  START_STATION_LONGITUDE float,
+  END_STATION_ID integer,
+  END_STATION_NAME string,
+  END_STATION_LATITUDE float,
+  END_STATION_LONGITUDE float,
+  BIKEID integer,
+  MEMBERSHIP_TYPE string,
+  USERTYPE string,
+  BIRTH_YEAR integer,
+  GENDER integer
+ );
+ 
+ select * from SF_TRIPS;
+ 
+ select 
+    current_date(),
+    current_time(),
+    current_timestamp(),
+    sysdate()
+    ;
+    
+ select current_date();
+ 
+ 
+ list @citibike_trips;
+ -----------------------------------------------
+ 
+ --- Copying from S3 bucket in to SNOWFLAKE staging table
+ 
+ copy into SF_TRIPS from @citibike_trips1
+ file_format = CSV
+ ON_ERROR='SKIP_FILE';
+ 
+ select * from SF_TRIPS;
+    
+ -------------------------------------------
+ 
+ CREATE TABLE employees 
+    ( employee_id    string,  
+      first_name     string,  
+      last_name      string,  
+      email          string,  
+	  phone_number   string,  
+      hire_date      string,  
+	  job_id         string,  
+	  salary         string,  
+      commission_pct string,  
+      manager_id     string,  
+      department_id  string  
+);
+
+drop table employees;
+
+truncate employee1;
+drop table HR.PUBLIC.employee;
+
+create table departments(
+department_id string,
+department_name string,
+manager_id string,
+location_id string
+);
+
+
+drop table departments;
+
+create table jobs(
+job_id string,
+job_title string,
+min_salary string,
+  max_salary string
+);
+
+drop table JOB_HISTROY;
+
+create table job_history(
+employee_id string,
+start_date string,
+end_date string,
+job_id string,
+department_id string
+);
+
+
+create table regions(
+region_id string,
+  region_name string
+);
+
+drop table region_id;
+
+create table countries(
+country_id string,
+country_name string,
+region_id string
+);
+
+create table locations(
+location_id string,
+street_address string,
+postal_code string,
+city string,
+state_province string,
+country_id string
+);
+--------------------------------------------------------------------------
+--Loading LOCATIONS Table Data
+--- I deleted 3 rows for successful loading of data  total 21rows
+
+
+drop table HR.PUBLIC.locations;
+
+COPY INTO "HR"."PUBLIC"."LOCATIONS" FROM @/ui1654519527373 FILE_FORMAT = '"HR"."PUBLIC"."CSV"' ON_ERROR = 'SKIP_FILE' PURGE = TRUE;
+
+select * from locations;
+desc table locations;
+
+info loading_data;
+
+-------------------------------------------------------------------------------
+
+--- COUNTRIES Table loading is successful wthout any modifications , 26 rows
+
+select * from countries;
+
+---------------------------------------------------------------------------------
+--- REGIONS table loading is successful with 5 rows.
+
+--- JOB_HISTORY table loading is successful with 12 rows.
+
+------------------------------------------
+
+
+
+
+
+snowflake  Trainer to Everyone
+
+select * from EMployees;
+
+delete from employees where SALARy = 'SALARY';
+
+
+select * from countries;
+
+delete from countries where country_id = 'COUNTRY_ID';
+
+select * from departments;
+delete from departments where department_id = 'DEPARTMENT_ID';
+
+select * from job_history;
+
+delete from job_history where employee_id = 'EMPLOYEE_ID';
+
+delete from job_history where employee_id = 'EMPLOYEE_ID';
+
+select * from locations;
+
+delete from locations where location_id = 'LOCATION_ID';
+
+select * from regions;
+
+delete from regions where region_id = 'REGION_ID';
+
+select
+employees.employee_id,
+first_name||' '||last_name FULL_NAME,
+salary+5000 BONUS,
+email,
+hire_date,
+commission_pct,
+start_date,
+end_date,
+jobs.job_id,
+job_title,
+min_salary,
+max_salary,
+departments.department_id,
+department_name,
+locations.location_id,
+postal_code,
+city,
+state_province,
+country_name,
+region_name,
+(case when salary < 10000 then 'LOW_SAL'
+      when salary > 10000 then 'HIGH_SAL'end) STATUS
+from
+employees,
+job_history,
+jobs,
+departments,
+locations,
+countries,
+regions
+where
+employees.department_id=departments.department_id
+and
+employees.job_id=jobs.job_id
+and
+employees.employee_id=job_history.employee_id
+and
+locations.location_id=departments.location_id
+and
+locations.country_id=countries.country_id
+and
+countries.region_id=regions.region_id;
+
+
+----------------------------------------------------------------------------------------
+
