@@ -295,3 +295,31 @@ insert into demo01 (msg) values
 ('2nd row'), ('3rd row'), ('4th row'), ('5th row'), ('6th row'), 
 
 --------------------------------------------------------------------------------
+
+/* -- Table >> Schema >> Database >> Account
+Account leave objects are as follows
+ 1. Users
+ 2. Roles
+ 3. Warehouses
+ 4. ResourceMonitors
+ 5. Integrations
+ 6.Databases
+ 7. Shared Objects
+ 
+ An Account can have many Databases
+ A Database can have many Schemas
+ A Schema can have
+   1. Table
+   2. External Table
+   3. File Format
+   4. View
+   5. Stored Procedure
+   6. Sequence
+   7. Stage
+   8. Pipe
+   9. Stream
+   10.Task
+   11. UDF
+
+
+
